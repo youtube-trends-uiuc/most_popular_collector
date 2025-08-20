@@ -16,6 +16,22 @@ su ubuntu -c 'sudo apt-get install -y screen'
 su ubuntu -c "screen -dmS internet_scholar sh -c '/home/ubuntu/{new_name} {s3_config} 2>&1 | tee output.txt; exec bash'"
 """
 
+aws_config = {
+    "s3-admin": "internet-scholar-admin",
+    "s3-data": "internet-scholar",
+    "athena-admin": "internet_scholar_admin",
+    "athena-data": "internet_scholar",
+    "default_region": "us-west-2",
+    "key_name": "webscholar",
+    "security_group": "launch-wizard-1",
+    "iam": "ec2_internetscholar",
+    "instance_type": "t3a.nano",
+    "volume_size": 15,
+    "name": "youtube-video-snippet",
+    "init_script": "https://raw.githubusercontent.com/internet-scholar/youtube_video_snippet/master/init_script.sh",
+    "ami": "ami-020d545e05dd191a9"
+}
+
 
 def lambda_handler(event, context):
     url_object = urlparse(event['s3_config'], allow_fragments=False)
