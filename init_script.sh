@@ -1,6 +1,6 @@
 #!/bin/bash
 sudo timedatectl set-timezone UTC
-sudo apt-get install -y python3-pip default-jre
+sudo apt-get install -y python3-pip python3-venv default-jre
 cd /home/ubuntu
 wget https://repo1.maven.org/maven2/org/apache/orc/orc-tools/2.2.0/orc-tools-2.2.0-uber.jar
 wget https://raw.githubusercontent.com/youtube-trends-uiuc/recommendations_collector/refs/heads/main/collect_recommendations.py
