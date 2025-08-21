@@ -1,5 +1,6 @@
-import boto3
+# This is the code that goes into the AWS Lambda function.
 
+import boto3
 
 INIT_SCRIPT = """#!/bin/bash
 cd /home/ubuntu
