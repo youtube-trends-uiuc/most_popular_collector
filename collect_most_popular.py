@@ -45,11 +45,11 @@ def read_credentials():
     return credentials
 
 
-def collect_recommendations():
+def collect_most_popular():
     credentials = read_credentials()
     # TODO: Maybe shuffle credentials.
 
-    with open('./recommendations.json', 'w') as json_writer:
+    with open('./most_popular.json', 'w') as json_writer:
         current_key = 0
         youtube = get_youtube_client(credentials[current_key]['developer_key'])
 
@@ -116,4 +116,4 @@ def collect_recommendations():
 
 
 if __name__ == '__main__':
-    collect_recommendations()
+    collect_most_popular()
