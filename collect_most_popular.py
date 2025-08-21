@@ -17,7 +17,6 @@ COUNTRIES = ["AE", "AR", "AT", "AU", "AZ", "BA", "BE", "BG", "BH", "BO", "BR", "
              "PA", "PE", "PH", "PK", "PL", "PR", "PT", "PY", "QA", "RO", "RS", "RU", "SA", "SE", "SG", "SI", "SK", "SN",
              "SV", "TH", "TN", "TR", "TW", "TZ", "UA", "UG", "US", "UY", "VN", "YE", "ZA", "ZW"]
 
-COUNTRIES_2 = ["AE", "AR"]
 
 WAIT_WHEN_SERVICE_UNAVAILABLE = 30
 WAIT_WHEN_CONNECTION_RESET_BY_PEER = 60
@@ -37,23 +36,19 @@ def get_youtube_client(developer_key):
     return youtube
 
 
-def read_credentials():
+def collect_most_popular():
+    # read credentials
     s3 = boto3.resource('s3')
     content_object = s3.Object('youtube-trends-uiuc-admin', 'credentials.json')
     file_content = content_object.get()['Body'].read().decode('utf-8')
     credentials = json.loads(file_content)
-    return credentials
-
-
-def collect_most_popular():
-    credentials = read_credentials()
     # TODO: Maybe shuffle credentials.
 
     with open('./most_popular.json', 'w') as json_writer:
         current_key = 0
         youtube = get_youtube_client(credentials[current_key]['developer_key'])
 
-        for region_code in COUNTRIES_2:
+        for region_code in COUNTRIES:
             service_unavailable = 0
             connection_reset_by_peer = 0
             no_response = True
@@ -114,6 +109,6 @@ def collect_most_popular():
                 rank = rank + 1
                 json_writer.write("{}\n".format(json.dumps(item)))
 
-
+# TODO: A system to tell us when there is an error.
 if __name__ == '__main__':
     collect_most_popular()

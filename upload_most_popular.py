@@ -12,5 +12,6 @@ def upload_most_popular():
                                                  f"creation_date={creation_date}/period={period}/most_popular.orc")
 
 
+# TODO: A system to tell us when there is an error.
 if __name__ == '__main__':
     upload_most_popular()
