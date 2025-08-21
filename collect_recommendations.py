@@ -8,7 +8,6 @@ import datetime
 from socket import error as socket_error
 import errno
 import boto3
-from urllib.parse import urlparse
 
 
 COUNTRIES = ["AE", "AR", "AT", "AU", "AZ", "BA", "BE", "BG", "BH", "BO", "BR", "BY", "CA", "CH", "CL", "CO", "CR", "CY",
@@ -39,18 +38,16 @@ def get_youtube_client(developer_key):
 
 
 def read_credentials():
-    url_object = urlparse('s3://youtube-trends-uiuc-admin/credentials.json', allow_fragments=False)
     s3 = boto3.resource('s3')
-    content_object = s3.Object(url_object.netloc, url_object.path.lstrip('/'))
+    content_object = s3.Object('youtube-trends-uiuc-admin', 'credentials.json')
     file_content = content_object.get()['Body'].read().decode('utf-8')
     credentials = json.loads(file_content)
     return credentials
 
 
 def collect_recommendations():
-    # TODO: upload recommendations to S3
-
     credentials = read_credentials()
+    # TODO: Maybe shuffle credentials.
 
     with open('./recommendations.json', 'w') as json_writer:
         current_key = 0
@@ -63,8 +60,7 @@ def collect_recommendations():
             response = dict()
             while no_response:
                 try:
-                    response = youtube.videos().list(part='id,statistics,snippet',
-                                                     type='video',
+                    response = youtube.videos().list(part='snippet,statistics',
                                                      chart='mostPopular',
                                                      regionCode=region_code,
                                                      maxResults=50).execute()
@@ -108,10 +104,11 @@ def collect_recommendations():
                         raise
 
             rank = 1
-            retrieved_at = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+            retrieved_at = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%d %H:%M:%S.%f") + "000"
             for item in response.get('items', {}):
-                item['snippet']['publishedAt'] = item['snippet']['publishedAt'].rstrip('Z').replace('T', ' ')
+                item['snippet']['publishedAt'] = item['snippet']['publishedAt'].replace('Z', '.000000000').replace('T', ' ')
                 item['metadata'] = dict()
+                item['metadata']['region_code'] = region_code
                 item['metadata']['retrieved_at'] = retrieved_at
                 item['metadata']['rank'] = rank
                 rank = rank + 1
@@ -119,4 +116,4 @@ def collect_recommendations():
 
 
 if __name__ == '__main__':
-    print(read_credentials())
+    collect_recommendations()
