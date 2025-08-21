@@ -5,7 +5,7 @@ INIT_SCRIPT = """#!/bin/bash
 cd /home/ubuntu
 su ubuntu -c 'mkdir .aws'
 su ubuntu -c 'printf "[default]\\nregion=us-west-2" > /home/ubuntu/.aws/config'
-su ubuntu -c 'wget https://raw.githubusercontent.com/youtube-trends-uiuc/recommendations_collector/refs/heads/main/init_script.sh'
+su ubuntu -c 'wget https://raw.githubusercontent.com/youtube-trends-uiuc/most_popular_collector/refs/heads/main/init_script.sh'
 su ubuntu -c 'chmod +x /home/ubuntu/init_script.sh'
 su ubuntu -c 'sudo apt-get update -y'
 su ubuntu -c 'sudo apt-get install -y screen'
