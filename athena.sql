@@ -55,12 +55,25 @@ CREATE EXTERNAL TABLE IF NOT EXISTS youtube_trends (
   metadata struct<
     region_code:string,
     retrieved_at:timestamp,
-    rank:int
+    rank:int,
+    strict_periodicity:boolean,
+    batch_type:tinyint,
+    time_elapsed_since_last_retrieval:bigint,
+    likes_recorded:boolean
   >
 )
 PARTITIONED BY (creation_date String, period String)
 STORED AS ORC
 LOCATION 's3://youtube-trends-uiuc/'
-tblproperties ("orc.compress"="ZLIB");
-
-msck repair table youtube_trends;
+tblproperties (
+  'orc.compress'='ZLIB',
+  'projection.enabled' = 'true',
+  'projection.creation_date.type' = 'date',
+  'projection.creation_date.range' = '2020-01-01,NOW',
+  'projection.creation_date.format' = 'yyyy-MM-dd',
+  'projection.creation_date.interval' = '1',
+  'projection.creation_date.interval.unit' = 'DAYS',
+  'projection.period.type' = 'enum',
+  'projection.period.values' = '00,06,12,18',
+  'storage.location.template' = 's3://youtube-trends-uiuc/creation_date=${creation_date}/period=${period}/'
+);

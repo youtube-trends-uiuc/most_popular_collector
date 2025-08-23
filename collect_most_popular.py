@@ -106,6 +106,10 @@ def collect_most_popular():
                 item['metadata']['region_code'] = region_code
                 item['metadata']['retrieved_at'] = retrieved_at
                 item['metadata']['rank'] = rank
+                item['metadata']['strict_periodicity'] = True
+                item['metadata']['batch_type'] = 0
+                item['metadata']['time_elapsed_since_last_retrieval'] = None
+                item['metadata']['likes_recorded'] = True
                 rank = rank + 1
                 json_writer.write("{}\n".format(json.dumps(item)))
 
