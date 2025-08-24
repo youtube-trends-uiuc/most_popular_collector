@@ -10,6 +10,7 @@ def upload_most_popular():
                                                       f"json/creation_date={creation_date}/period={period}/most_popular.json.bz2")
     s3.Bucket('youtube-trends-uiuc').upload_file("./most_popular.orc",
                                                  f"creation_date={creation_date}/period={period}/most_popular.orc")
+    # TODO: create lifecycle rule to move .json.bz2 files to S3 Glacier.
 
 
 # TODO: A system to tell us when there is an error.
